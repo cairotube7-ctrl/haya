@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#ffd166"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<title>يلا نتعلم يا حياة 🌟</title>
+<style>
+  :root{
+    --bg1:#fff1c9; --bg2:#c9f0ff; --card:#ffffff; --text:#2b2b3a; --accent:#ff7a7a; --accent2:#5cc8ff;
+    box-sizing:border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html{ scroll-padding-top: env(safe-area-inset-top, 0px); height:100%; }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; height:100%;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:linear-gradient(160deg,var(--bg1),var(--bg2));
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; color:var(--text);
+  }
+  .screen{ width:100%; max-width:480px; height:100%; display:none; flex-direction:column; align-items:center; justify-content:center; padding:16px; gap:18px; }
+  .screen.active{ display:flex; }
+  /* Welcome */
+  #welcome .box{ background:var(--card); border-radius:32px; padding:36px 24px; text-align:center; box-shadow:0 18px 40px rgba(0,0,0,.15); max-width:340px; }
+  #welcome .emoji{ font-size:5rem; margin-bottom:10px; }
+  #welcome h1{ font-size:1.5rem; margin:6px 0; }
+  #welcome p{ color:#6a6a80; font-size:1rem; }
+  .big-btn{ margin-top:18px; border:none; border-radius:20px; padding:16px 28px; font-size:1.2rem; font-weight:800; color:#fff; background:var(--accent); box-shadow:0 10px 22px rgba(255,122,122,.45); cursor:pointer; }
+  .big-btn:active{ transform:scale(.95); }
+  /* Menu */
+  #menu h2{ font-size:1.3rem; margin:0 0 4px; }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; width:100%; max-width:360px; }
+  .cat-btn{ background:var(--card); border:none; border-radius:24px; padding:22px 10px; display:flex; flex-direction:column; align-items:center; gap:8px; box-shadow:0 10px 22px rgba(0,0,0,.1); cursor:pointer; }
+  .cat-btn .ic{ font-size:2.6rem; }
+  .cat-btn .lb{ font-weight:800; font-size:1.05rem; }
+  .cat-btn:active{ transform:scale(.95); }
+  /* Card view */
+  #play{ justify-content:flex-start; padding-top:calc(16px + env(safe-area-inset-top,0px)); }
+  .topbar{ width:100%; max-width:340px; display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .back-btn{ border:none; background:#e7e7f2; color:var(--text); border-radius:16px; padding:8px 14px; font-weight:700; font-size:1rem; cursor:pointer; }
+  .counter{ font-size:.95rem; font-weight:700; color:#5a5a72; }
+  .card{ background:var(--card); border-radius:32px; width:100%; max-width:340px; aspect-ratio:3/4; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 18px 40px rgba(0,0,0,.15); padding:20px; text-align:center; animation:pop .35s ease; margin-top:10px; }
+  @keyframes pop{ from{transform:scale(.85);opacity:0} to{transform:scale(1);opacity:1} }
+  .symbol{ font-size:6.5rem; line-height:1; margin-bottom:10px; filter:drop-shadow(0 6px 8px rgba(0,0,0,.12)); }
+  .primary{ font-size:2rem; font-weight:800; margin:2px 0; }
+  .secondary{ font-size:1.25rem; font-weight:600; color:#7a7a90; margin:2px 0; }
+  .secondary.ltr{ direction:ltr; }
+  .speak-btn{ margin-top:14px; width:60px; height:60px; border-radius:50%; border:none; background:var(--accent2); color:#fff; font-size:1.5rem; box-shadow:0 8px 18px rgba(92,200,255,.5); cursor:pointer; }
+  .speak-btn:active{ transform:scale(.92); }
+  .controls{ display:flex; gap:22px; align-items:center; justify-content:center; width:100%; margin-top:14px; }
+  .nav-btn{ width:70px; height:70px; border-radius:50%; border:none; font-size:1.8rem; color:#fff; background:var(--accent); box-shadow:0 10px 20px rgba(255,122,122,.45); cursor:pointer; }
+  .nav-btn:active{ transform:scale(.92); }
+  .nav-btn.prev{ background:#b8b8d8; box-shadow:0 10px 20px rgba(184,184,216,.5); }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --card:#2a2a38; --text:#f0f0f5; }
+    body{ background:linear-gradient(160deg,#33314a,#1f3a4a); }
+  }
+
+.special{grid-column:1/-1;flex-direction:row;justify-content:center;gap:14px}
+.prompt{font-size:1.25rem;font-weight:800;text-align:center;min-height:2.4em}
+.prompt.ok,.fb.ok{color:#1fa64a}.prompt.no,.fb.no{color:#e0453a}
+.hand{position:relative;width:280px;height:340px;margin-top:6px}
+.palm{position:absolute;bottom:0;left:20px;right:20px;height:170px;background:#ffd9b8;border-radius:40px 40px 70px 70px}
+.finger{position:absolute;bottom:130px;width:48px;border-radius:24px 24px 10px 10px;background:#ffd9b8;border:none;padding-top:10px;font-size:1.9rem;font-weight:800;color:#b3402f;cursor:pointer;box-shadow:inset 0 -4px 0 rgba(0,0,0,.06)}
+.finger:active{transform:scale(.93)}
+.opts{display:grid;grid-template-columns:1fr;gap:12px;width:100%;max-width:340px}
+.opt{border:none;border-radius:20px;padding:16px;font-size:1.4rem;font-weight:800;background:var(--card);color:var(--text);box-shadow:0 8px 18px rgba(0,0,0,.1);cursor:pointer}
+.opt.good{background:#b9f0c8}.opt.bad{background:#ffc9c4;animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fb{font-size:1.3rem;font-weight:800;text-align:center;min-height:2em}
+
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:340px}
+.cdot{aspect-ratio:1;border-radius:50%;border:4px solid #fff;box-shadow:0 8px 18px rgba(0,0,0,.2);cursor:pointer}
+.cdot.pop{animation:bump .45s}
+@keyframes bump{40%{transform:scale(1.25) rotate(8deg)}100%{transform:scale(1)}}
+.cname{font-size:1.8rem;font-weight:800;min-height:1.6em;text-align:center}
+.conf{position:fixed;font-size:1.8rem;pointer-events:none;animation:fly 1.2s ease-out forwards;z-index:9}
+@keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(360deg);opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="welcome">
+  <div class="box">
+    <div class="emoji">🌟</div>
+    <h1>ياحياة!</h1>
+    <p>تعالي نلعب ونتعلم سوا!</p>
+    <button class="big-btn" id="startBtn">يلا بينا 🎈</button>
+  </div>
+</div>
+
+<div class="screen" id="menu">
+  <h2>اختاري إيه هنلعب بيه يا حياة</h2>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="screen" id="play">
+  <div class="topbar">
+    <button class="back-btn" id="backBtn">‹ رجوع</button>
+    <div class="counter" id="counter">1 / 50</div>
+  </div>
+  <div class="card" id="card">
+    <div class="symbol" id="symbol">🐱</div>
+    <div class="primary" id="primary">قطة</div>
+    <div class="secondary" id="secondary">Cat</div>
+    <button class="speak-btn" id="speakBtn">🔊</button>
+  </div>
+  <div class="controls">
+    <button class="nav-btn prev" id="prevBtn">›</button>
+    <button class="nav-btn next" id="nextBtn">‹</button>
+  </div>
+</div>
+
+<div class="screen" id="hand">
+ <div class="topbar"><button class="back-btn" id="hBack">‹ رجوع</button><div class="counter" id="hCount"></div></div>
+ <div class="prompt" id="hPrompt"></div>
+ <div class="hand" id="handBox"></div>
+ <div class="controls"><button class="nav-btn prev" id="hPrev">›</button><button class="big-btn" id="hMode" style="margin:0">🎯 لعبة</button><button class="nav-btn next" id="hNext">‹</button></div>
+</div>
+<div class="screen" id="quiz">
+ <div class="topbar"><button class="back-btn" id="qBack">‹ رجوع</button><div class="counter" id="qScore">⭐ 0</div></div>
+ <div class="card" style="aspect-ratio:auto;padding:24px"><div class="symbol" id="qSym"></div><div class="primary" id="qAsk"></div></div>
+ <div class="opts" id="qOpts"></div>
+ <div class="fb" id="qFb"></div>
+</div>
+<div class="screen" id="colors">
+ <div class="topbar"><button class="back-btn" id="cBack">‹ رجوع</button><div class="counter" id="cScore">🎨</div></div>
+ <div class="cname" id="cName">دوسي على أي لون 👆</div>
+ <div class="cgrid" id="cGrid"></div>
+ <button class="big-btn" id="cMode" style="margin:0">🎯 لعبة</button>
+</div>
+<script>
+const CATS = {
+animals:{title:"الحيوانات",icon:"🐾",secDir:"ltr",data:[
+["🐱","قطة","Cat"],["🐶","كلب","Dog"],["🦁","أسد","Lion"],["🐯","نمر","Tiger"],
+["🐘","فيل","Elephant"],["🦒","زرافة","Giraffe"],["🐴","حصان","Horse"],["🐮","بقرة","Cow"],
+["🐷","خنزير","Pig"],["🐑","خروف","Sheep"],["🐐","ماعز","Goat"],["🐔","دجاجة","Chicken"],
+["🦆","بطة","Duck"],["🐰","أرنب","Rabbit"],["🐻","دب","Bear"],["🐼","باندا","Panda"],
+["🐨","كوالا","Koala"],["🐵","قرد","Monkey"],["🦊","ثعلب","Fox"],["🐺","ذئب","Wolf"],
+["🦓","حمار وحشي","Zebra"],["🦏","وحيد القرن","Rhino"],["🦛","فرس النهر","Hippo"],["🐫","جمل","Camel"],
+["🦘","كنغر","Kangaroo"],["🐿️","سنجاب","Squirrel"],["🦔","قنفذ","Hedgehog"],["🦇","خفاش","Bat"],
+["🐹","هامستر","Hamster"],["🐭","فأر","Mouse"],["🐍","ثعبان","Snake"],["🐢","سلحفاة","Turtle"],
+["🦎","سحلية","Lizard"],["🐊","تمساح","Crocodile"],["🐸","ضفدع","Frog"],["🦈","قرش","Shark"],
+["🐬","دولفين","Dolphin"],["🐳","حوت","Whale"],["🐟","سمكة","Fish"],["🐙","أخطبوط","Octopus"],
+["🦀","سرطان بحر","Crab"],["🦞","كركند","Lobster"],["🦋","فراشة","Butterfly"],["🐝","نحلة","Bee"],
+["🐞","خنفساء","Ladybug"],["🕷️","عنكبوت","Spider"],["🦉","بومة","Owl"],["🦅","نسر","Eagle"],
+["🦜","ببغاء","Parrot"],["🐧","بطريق","Penguin"]
+]},
+numbers:{title:"الأرقام",icon:"🔢",secDir:"ltr",data:[
+["١","واحد","One"],["٢","اثنان","Two"],["٣","ثلاثة","Three"],["٤","أربعة","Four"],
+["٥","خمسة","Five"],["٦","ستة","Six"],["٧","سبعة","Seven"],["٨","ثمانية","Eight"],
+["٩","تسعة","Nine"],["١٠","عشرة","Ten"],["١١","أحد عشر","Eleven"],["١٢","اثنا عشر","Twelve"],
+["١٣","ثلاثة عشر","Thirteen"],["١٤","أربعة عشر","Fourteen"],["١٥","خمسة عشر","Fifteen"],
+["١٦","ستة عشر","Sixteen"],["١٧","سبعة عشر","Seventeen"],["١٨","ثمانية عشر","Eighteen"],
+["١٩","تسعة عشر","Nineteen"],["٢٠","عشرون","Twenty"]
+]},
+letters:{title:"الحروف",icon:"🔤",secDir:"rtl",data:[
+["ا","ألف","أرنب"],["ب","باء","بطة"],["ت","تاء","تفاح"],["ث","ثاء","ثعلب"],
+["ج","جيم","جمل"],["ح","حاء","حصان"],["خ","خاء","خروف"],["د","دال","دب"],
+["ذ","ذال","ذئب"],["ر","راء","رمان"],["ز","زاي","زرافة"],["س","سين","سمكة"],
+["ش","شين","شمس"],["ص","صاد","صقر"],["ض","ضاد","ضفدع"],["ط","طاء","طائر"],
+["ظ","ظاء","ظبي"],["ع","عين","عصفور"],["غ","غين","غزال"],["ف","فاء","فيل"],
+["ق","قاف","قطة"],["ك","كاف","كلب"],["ل","لام","ليمون"],["م","ميم","موز"],
+["ن","نون","نمر"],["ه","هاء","هدهد"],["و","واو","وردة"],["ي","ياء","يد"]
+]},
+plants:{title:"النباتات",icon:"🌿",secDir:"ltr",data:[
+["🌳","شجرة","Tree"],["🌴","نخلة","Palm Tree"],["🌹","وردة","Rose"],["🌸","زهرة","Flower"],
+["🌻","عباد الشمس","Sunflower"],["🏵️","زنبق","Lily"],["🌼","ياسمين","Jasmine"],["🪻","بنفسج","Violet"],
+["🌼","أقحوان","Daisy"],["🌵","صبار","Cactus"],["🌿","عشب","Grass"],["🍃","ورقة","Leaf"],
+["🌿","غصن","Branch"],["🌱","جذر","Root"],["🌰","بذرة","Seed"],["🌷","توليب","Tulip"],
+["🌸","قرنفل","Carnation"],["🪻","لافندر","Lavender"],["🪷","نيلوفر","Lotus"],["🌺","خشخاش","Poppy"],
+["🌰","بلوط","Oak"],["🌲","صنوبر","Pine"],["🎋","خيزران","Bamboo"],["🌿","نعناع","Mint"],
+["🌿","ريحان","Basil"],["🌿","إكليل الجبل","Rosemary"],["🌿","زعتر","Thyme"],["🌾","قمح","Wheat"],
+["☁️","قطن","Cotton"],["🍄","فطر","Mushroom"]
+]},
+food:{title:"الأكل",icon:"🍎",secDir:"ltr",data:[
+["🍎","تفاحة","Apple"],["🍌","موزة","Banana"],["🍊","برتقالة","Orange"],["🍇","عنب","Grapes"],
+["🍓","فراولة","Strawberry"],["🍉","بطيخة","Watermelon"],["🍍","أناناس","Pineapple"],["🥭","مانجو","Mango"],
+["🍐","كمثرى","Pear"],["🍑","خوخ","Peach"],["🍒","كرز","Cherry"],["🍋","ليمون","Lemon"],
+["🥥","جوز الهند","Coconut"],["🥝","كيوي","Kiwi"],["🍅","طماطم","Tomato"],["🥕","جزر","Carrot"],
+["🥒","خيار","Cucumber"],["🥔","بطاطس","Potato"],["🧅","بصل","Onion"],["🧄","ثوم","Garlic"],
+["🌶️","فلفل","Pepper"],["🍆","باذنجان","Eggplant"],["🌽","ذرة","Corn"],["🍞","خبز","Bread"],
+["🧀","جبنة","Cheese"],["🥚","بيضة","Egg"],["🥩","لحمة","Meat"],["🍗","دجاجة مشوية","Grilled Chicken"],
+["🐟","سمك","Fish"],["🍕","بيتزا","Pizza"],["🍔","برجر","Burger"],["🍝","مكرونة","Pasta"],
+["🍚","أرز","Rice"],["🍲","شوربة","Soup"],["🍦","آيس كريم","Ice Cream"],["🎂","كيكة","Cake"],
+["🍩","دونات","Donut"],["🍫","شوكولاتة","Chocolate"],["🧃","عصير","Juice"],["🥛","حليب","Milk"]
+]}
+};
+
+let curKey = 'animals', idx = 0;
+const $ = id => document.getElementById(id);
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+function buildMenu(){
+  const grid = $('grid');
+  grid.innerHTML = '';
+  Object.keys(CATS).forEach(key=>{
+    const c = CATS[key];
+    const b = document.createElement('button');
+    b.className = 'cat-btn';
+    b.innerHTML = `<span class="ic">${c.icon}</span><span class="lb">${c.title}</span>`;
+    b.addEventListener('click', ()=> openCategory(key));
+    grid.appendChild(b);
+  });
+}
+
+function openCategory(key){
+  curKey = key; idx = 0;
+  showScreen('play');
+  render();
+}
+
+function render(){
+  const cat = CATS[curKey];
+  const [symbol, primary, secondary] = cat.data[idx];
+  $('symbol').textContent = symbol;
+  $('primary').textContent = primary;
+  const secEl = $('secondary');
+  secEl.textContent = secondary;
+  secEl.className = 'secondary ' + (cat.secDir === 'ltr' ? 'ltr' : '');
+  $('counter').textContent = (idx+1) + ' / ' + cat.data.length;
+  const card = $('card');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'pop .35s ease';
+  speak();
+}
+
+function speak(){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    const cat = CATS[curKey];
+    const [,primary, secondary] = cat.data[idx];
+    window.speechSynthesis.cancel();
+    const u1 = new SpeechSynthesisUtterance(primary);
+    u1.lang = 'ar-EG'; u1.rate = 0.85;
+    window.speechSynthesis.speak(u1);
+    if(cat.secDir === 'ltr'){
+      const u2 = new SpeechSynthesisUtterance(secondary);
+      u2.lang = 'en-US'; u2.rate = 0.85;
+      window.speechSynthesis.speak(u2);
+    }
+  }catch(e){}
+}
+
+$('startBtn').addEventListener('click', ()=>{
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance('أهلاً يا حياة! تعالي نلعب ونتعلم سوا!');
+    u.lang = 'ar-EG'; u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+  showScreen('menu');
+});
+$('backBtn').addEventListener('click', ()=> showScreen('menu'));
+$('nextBtn').addEventListener('click', ()=>{
+  const len = CATS[curKey].data.length;
+  idx = (idx + 1) % len;
+  render();
+});
+$('prevBtn').addEventListener('click', ()=>{
+  const len = CATS[curKey].data.length;
+  idx = (idx - 1 + len) % len;
+  render();
+});
+$('speakBtn').addEventListener('click', speak);
+
+function say(t,lang){try{const sy=window.speechSynthesis;sy.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=lang||'ar-EG';u.rate=.85;u.pitch=1.15;const v=sy.getVoices().find(v=>v.lang.replace('_','-').toLowerCase()==='ar-eg')||sy.getVoices().find(v=>v.lang.toLowerCase().startsWith('ar'));if(v)u.voice=v;sy.speak(u);}catch(e){}}
+const OKS=["برافو عليكي يا حياة! صح!","شاطرة أوي يا حياة! صح كده!","تمام يا قمر! صح!","يا سلام! إجابة صح!"];
+const BADS=["لأ يا حياة، غلط.. جرّبي تاني","أوبس! غلط، حاولي تاني","مش كده يا قمر، جرّبي تاني"];
+function fb(ok,el){const a=ok?OKS:BADS;const m=a[Math.floor(Math.random()*a.length)];el.textContent=(ok?'🎉 ':'🙈 ')+m;el.className=el.className.replace(/ ?(ok|no)/g,'')+(ok?' ok':' no');say(m);}
+const LET=CATS.letters.data;let hp=0,hGame=false,hT=0;
+function hRender(){const box=$('handBox');box.innerHTML='<div class="palm"></div>';const L=[10,62,114,166,218],H=[130,175,195,175,125];
+LET.slice(hp*5,hp*5+5).forEach((l,i)=>{const b=document.createElement('button');b.className='finger';b.style.left=L[i]+'px';b.style.height=H[i]+'px';b.textContent=l[0];b.onclick=()=>hTap(i);box.appendChild(b);});
+$('hCount').textContent=(hp+1)+' / '+Math.ceil(LET.length/5);$('hPrompt').className='prompt';
+if(hGame)hAsk();else $('hPrompt').textContent='دوسي على أي صباع تسمعي الحرف 👆';}
+function hAsk(){const n=Math.min(5,LET.length-hp*5);hT=Math.floor(Math.random()*n);const m='فين حرف '+LET[hp*5+hT][1]+'؟';$('hPrompt').textContent='🖐️ '+m;say(m);}
+function hTap(i){const l=LET[hp*5+i];if(!hGame){say(l[1]+'... '+l[2]);return;}
+if(i===hT){fb(true,$('hPrompt'));setTimeout(hAsk,2200);}else fb(false,$('hPrompt'));}
+$('hNext').onclick=()=>{hp=(hp+1)%Math.ceil(LET.length/5);hRender();};
+$('hPrev').onclick=()=>{const n=Math.ceil(LET.length/5);hp=(hp-1+n)%n;hRender();};
+$('hMode').onclick=()=>{hGame=!hGame;$('hMode').textContent=hGame?'📖 تعلّم':'🎯 لعبة';hRender();};
+$('hBack').onclick=()=>{try{speechSynthesis.cancel();}catch(e){}showScreen('menu');};
+let qS=0,qA='';
+function qNew(){const ks=['animals','letters','numbers','food'],k=ks[Math.floor(Math.random()*4)],d=CATS[k].data,it=d[Math.floor(Math.random()*d.length)];
+let o=[it[1]];while(o.length<3){const x=d[Math.floor(Math.random()*d.length)][1];if(!o.includes(x))o.push(x);}
+o.sort(()=>Math.random()-.5);qA=it[1];$('qSym').textContent=it[0];$('qFb').textContent='';$('qFb').className='fb';
+$('qAsk').textContent=k==='letters'?'ده حرف إيه يا حياة؟':k==='numbers'?'ده رقم كام يا حياة؟':'ده إيه يا حياة؟';
+const bx=$('qOpts');bx.innerHTML='';bx.style.pointerEvents='auto';
+o.forEach(t=>{const b=document.createElement('button');b.className='opt';b.textContent=t;b.onclick=()=>qPick(b,t);bx.appendChild(b);});say($('qAsk').textContent);}
+function qPick(b,t){if(t===qA){qS++;$('qScore').textContent='⭐ '+qS;b.classList.add('good');$('qOpts').style.pointerEvents='none';fb(true,$('qFb'));setTimeout(qNew,2300);}else{b.classList.add('bad');fb(false,$('qFb'));}}
+$('qBack').onclick=()=>{try{speechSynthesis.cancel();}catch(e){}showScreen('menu');};
+function extraMenu(){const g=$('grid');
+[['🖐️','حروف على الصوابع',()=>{hp=0;hGame=false;$('hMode').textContent='🎯 لعبة';showScreen('hand');hRender();}],
+['🎮','لعبة صح وغلط',()=>{qS=0;$('qScore').textContent='⭐ 0';showScreen('quiz');qNew();}]].forEach(([ic,lb,fn])=>{
+const b=document.createElement('button');b.className='cat-btn special';b.innerHTML='<span class="ic">'+ic+'</span><span class="lb">'+lb+'</span>';b.onclick=fn;g.appendChild(b);});}
+
+const COLS=[["أحمر","Red","#e53935"],["أزرق","Blue","#1e88e5"],["أخضر","Green","#43a047"],["أصفر","Yellow","#fdd835"],["برتقالي","Orange","#fb8c00"],["بنفسجي","Purple","#8e24aa"],["وردي","Pink","#ff80ab"],["بني","Brown","#6d4c41"],["أسود","Black","#212121"],["أبيض","White","#ffffff"],["رمادي","Gray","#9e9e9e"],["سماوي","Sky Blue","#4dd0e1"]];
+let cGame=false,cT=0,cS=0;
+function confetti(el){const r=el.getBoundingClientRect(),E=['🎉','⭐','✨','🎈','💖'];for(let i=0;i<12;i++){const c=document.createElement('span');c.className='conf';c.textContent=E[i%5];c.style.left=(r.left+r.width/2)+'px';c.style.top=(r.top+r.height/2)+'px';c.style.setProperty('--x',(Math.random()*240-120)+'px');c.style.setProperty('--y',(-80-Math.random()*160)+'px');document.body.appendChild(c);setTimeout(()=>c.remove(),1300);}}
+function cAsk(){cT=Math.floor(Math.random()*COLS.length);const m='فين اللون '+COLS[cT][0]+'؟';$('cName').textContent='🎨 '+m;$('cName').className='cname';$('cName').style.color='';say(m);}
+function cRender(){const g=$('cGrid');g.innerHTML='';COLS.forEach((c,i)=>{const b=document.createElement('button');b.className='cdot';b.style.background=c[2];b.onclick=()=>cTap(i,b);g.appendChild(b);});
+if(cGame)cAsk();else{$('cName').textContent='دوسي على أي لون 👆';$('cName').style.color='';}}
+function cTap(i,b){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+if(!cGame){$('cName').textContent=COLS[i][0]+' - '+COLS[i][1];$('cName').style.color=COLS[i][2]==='#ffffff'?'#999':COLS[i][2];say(COLS[i][0]+'... '+COLS[i][1]);confetti(b);return;}
+if(i===cT){cS++;$('cScore').textContent='⭐ '+cS;confetti(b);fb(true,$('cName'));setTimeout(cAsk,2300);}else fb(false,$('cName'));}
+$('cMode').onclick=()=>{cGame=!cGame;$('cMode').textContent=cGame?'📖 تعلّم':'🎯 لعبة';cRender();};
+$('cBack').onclick=()=>{try{speechSynthesis.cancel();}catch(e){}showScreen('menu');};
+const _em=extraMenu;extraMenu=function(){_em();const b=document.createElement('button');b.className='cat-btn special';b.innerHTML='<span class="ic">🎨</span><span class="lb">الألوان</span>';b.onclick=()=>{cGame=false;cS=0;$('cScore').textContent='🎨';$('cMode').textContent='🎯 لعبة';showScreen('colors');cRender();};$('grid').appendChild(b);};
+buildMenu();extraMenu();
+</script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}</script>
+</body>
+</html>
